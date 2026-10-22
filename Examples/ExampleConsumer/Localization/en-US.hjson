@@ -1,0 +1,14 @@
+Mods: {
+  ExampleConsumer: {
+    Achievements: {
+      WorldHunt: {
+        FriendlyName: A Shared Victory
+        Description: Defeat King Slime in this world.
+      }
+      CharacterTraining: {
+        FriendlyName: Practice Makes Progress
+        Description: Defeat ten enemies with this character.
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+displayName = Eyes'Achievements
+author = Playstal1
+version = 0.1
+side = Both
+buildIgnore = .git/*, bin/*, obj/*, Tests/*, Examples/*, README.md

@@ -1,0 +1,4 @@
+displayName = Eyes'Achievements Example
+author = Playstal1
+version = 0.1
+modReferences = EyesAchievements

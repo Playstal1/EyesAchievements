@@ -1,0 +1,6 @@
+bin/
+obj/
+*.tmod
+/Tests/
+Examples/**/bin/
+Examples/**/obj/

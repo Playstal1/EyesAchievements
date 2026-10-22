@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ExampleTmlTargets Condition="Exists('..\..\..\tModLoader.targets')">..\..\..\tModLoader.targets</ExampleTmlTargets>
+    <ExampleTmlTargets Condition="'$(ExampleTmlTargets)' == ''">..\tModLoader.targets</ExampleTmlTargets>
+    <EyesAchievementsAssembly Condition="Exists('..\..\bin\Debug\net8.0\EyesAchievements.dll')">..\..\bin\Debug\net8.0\EyesAchievements.dll</EyesAchievementsAssembly>
+    <EyesAchievementsAssembly Condition="'$(EyesAchievementsAssembly)' == ''">..\EyesAchievements\bin\Debug\net8.0\EyesAchievements.dll</EyesAchievementsAssembly>
+  </PropertyGroup>
+  <Import Project="$(ExampleTmlTargets)" />
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup><Reference Include="EyesAchievements"><HintPath>$(EyesAchievementsAssembly)</HintPath><Private>false</Private></Reference></ItemGroup>
+</Project>

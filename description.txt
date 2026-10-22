@@ -1,0 +1,1 @@
+A scoped achievement library for mod developers. Supports user, character, world, and character-in-world progress with native achievement presentation and explicit multiplayer authority.
