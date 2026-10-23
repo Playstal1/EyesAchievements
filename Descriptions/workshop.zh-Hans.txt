@@ -1,0 +1,7 @@
+为 Terraria 模组创建成就的库。支持用户、角色、世界及特定世界内角色的进度，兼容多人模式，并使用原版成就界面。
+
+[h2]兼容模组[/h2]
+[b]Banner Progress[/b]：在怪物图鉴中提升生物等级，并提供四个由全世界玩家共同推进的成就目标。
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3822181165][img]https://images.steamusercontent.com/ugc/10248992834925504412/B87205BDC5B552A9EA780425EE6F55D4E82DD570/?imw=200&imh=126&ima=fit[/img][/url]
+
+[i]P.S. 我们正在开发 RootingOfStyle，这是一个重做职业系统的大型模组。由于开发周期较长，我们决定将其拆分为小型模块，把部分机制作为独立模组先行发布。[/i]
