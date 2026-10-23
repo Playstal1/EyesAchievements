@@ -17,6 +17,7 @@ internal static class AchievementRuntime
     internal static readonly object Gate = new();
     internal static readonly Dictionary<string, ScopedAchievement> Definitions = new(StringComparer.Ordinal);
     private static readonly Dictionary<(string, Guid, Guid), LiveProgress> Live = new();
+    private static readonly Dictionary<string, PendingPresentation> Presentations = new(StringComparer.Ordinal);
     private static readonly Dictionary<(AchievementEvent, int), List<(ScopedAchievement Definition, string Condition)>> Events = new();
     internal static event Action<AchievementCompletion>? Completed;
     internal static event Action<AchievementChange>? Changed;
@@ -46,6 +47,7 @@ internal static class AchievementRuntime
         {
             var instances = Live.Values.ToArray();
             Live.Clear();
+            Presentations.Clear();
             foreach (var progress in instances) progress.Definition.Release(progress.Achievement);
         }
     }
@@ -334,12 +336,58 @@ internal static class AchievementRuntime
     }
     private static void Refresh(ScopedAchievement definition, AchievementContext context, bool notify)
     {
-        if (!Main.dedServ && AchievementApi.LocalContext.Supports(definition.Scope) && context.Address(definition.Scope) == AchievementApi.LocalContext.Address(definition.Scope)) definition.Presentation?.Refresh(notify);
+        if (Main.dedServ) return;
+        lock (Gate)
+        {
+            bool ready = PresentationContext(out var local, out var session);
+            if (!ready) local = AchievementApi.LocalContext;
+            if (!local.Supports(definition.Scope) || context.Address(definition.Scope) != local.Address(definition.Scope)) return;
+            if (Presentations.Remove(definition.Id, out var pending) && pending.Context == local && pending.Session == session)
+                notify |= pending.Notify;
+            if (Main.gameMenu && definition.Scope != AchievementScope.User)
+            {
+                if (ready)
+                {
+                    StatusCore(definition.Id, local, out bool completed);
+                    Presentations[definition.Id] = new(local, session, notify && completed); // При подключении уведомление ждёт выхода из меню; токен сессии исключает перенос на следующее подключение.
+                }
+                return;
+            }
+            definition.Presentation?.Refresh(notify);
+        }
+    }
+    private static bool PresentationContext(out AchievementContext context, out Guid session)
+    {
+        context = default; session = Guid.Empty;
+        if (Main.dedServ || !AchievementWorld.Ready || Main.myPlayer < 0 || Main.myPlayer >= Main.maxPlayers
+            || !Main.LocalPlayer.TryGetModPlayer<AchievementPlayer>(out var player) || !player.Ready || player.Session == Guid.Empty) return false;
+        context = AchievementApi.ForPlayer(Main.LocalPlayer);
+        session = player.Session;
+        return true;
+    }
+    internal static void FlushPresentations()
+    {
+        if (Main.dedServ || Main.gameMenu) return;
+        lock (Gate)
+        {
+            if (Presentations.Count == 0) return;
+            var pending = Presentations.ToArray();
+            Presentations.Clear();
+            if (!PresentationContext(out var local, out var session)) return;
+            foreach (var entry in pending)
+                if (entry.Value.Context == local && entry.Value.Session == session && Definitions.TryGetValue(entry.Key, out var definition))
+                    definition.Presentation?.Refresh(entry.Value.Notify);
+        }
     }
     internal static void RefreshAll()
     {
         if (!Terraria.Program.IsMainThread) { Main.QueueMainThreadAction(RefreshAll); return; }
-        if (!Main.dedServ) foreach (var definition in Definitions.Values) definition.Presentation?.Refresh(false);
+        if (Main.dedServ) return;
+        if (Main.gameMenu && PresentationContext(out var local, out _))
+        {
+            foreach (var definition in Definitions.Values) Refresh(definition, local, false);
+        }
+        else foreach (var definition in Definitions.Values) definition.Presentation?.Refresh(false);
     }
     internal static void ResetVisible()
     {
@@ -364,6 +412,8 @@ internal static class AchievementRuntime
             catch (Exception error) { definition.Mod.Logger.Error("Achievement progress subscriber failed.", error); }
     }
     private static bool Reported(Dictionary<string, JObject> state) => state.TryGetValue("__eyes_meta", out var meta) && meta.Value<bool>("ClientReported");
+
+    private sealed record PendingPresentation(AchievementContext Context, Guid Session, bool Notify);
 
     private sealed class LiveProgress(ScopedAchievement definition, Achievement achievement, string? persisted, bool reported)
     {

@@ -1,1 +1,6 @@
-
+UI: {
+	SelectMod: Select achievement mod (scroll for more)
+	Completed: All achievements completed
+	View: View achievements
+	ServerReset: Server-controlled achievements must be reset by the server.
+}
