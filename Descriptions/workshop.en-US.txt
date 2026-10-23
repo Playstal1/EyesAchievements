@@ -1,0 +1,7 @@
+A library for creating achievements in Terraria mods. Supports user, character, world and character-in-world progress, multiplayer and the native achievement menu.
+
+[h2]Compatible mod[/h2]
+[b]Banner Progress[/b] — Bestiary creature progression and four achievements with shared world goals.
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3822181165][img]https://images.steamusercontent.com/ugc/10248992834925504412/B87205BDC5B552A9EA780425EE6F55D4E82DD570/?imw=200&imh=126&ima=fit[/img][/url]
+
+[i]P.S. We are developing RootingOfStyle, a larger mod that reworks the class system. Development has taken longer than expected, so we decided to split it into smaller modules and release individual mechanics as standalone mods.[/i]
