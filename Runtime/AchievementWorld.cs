@@ -63,6 +63,7 @@ public sealed class AchievementWorld : ModSystem
     }
     public override void PostUpdateEverything()
     {
+        AchievementRuntime.FlushPresentations();
         AchievementNetwork.FlushObservations();
         if (!Main.dedServ && UserDirty && Main.GameUpdateCount % 60 == 0) SaveUser();
     }

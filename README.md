@@ -6,6 +6,8 @@ The library targets tModLoader's 1.4.4 stable API (`2026.08`) and .NET 8. It req
 
 The library itself is `side = Both` and must be installed on both client and server in multiplayer. Consumers using World, Player, or PlayerWorld must also use `side = Both`. Client/NoSync consumers may register local User achievements; those definitions and their private data are not uploaded to a server. Server-only consumers are rejected with a load-time diagnostic.
 
+In the inventory, the arrow beside the achievement advisor expands a selector with Terraria and mods that have registered achievements. Selecting a mod icon closes the selector and shows its next available unfinished achievement, or its icon when none is available; clicking that slot opens the native achievement menu filtered to that group. The choice lasts until mods reload. Reset affects only the selected group: in multiplayer, library achievements can be reset locally only for the User scope; other scopes require server authority.
+
 ## Choose a scope
 
 | Scope | Identity and storage | Multiplayer authority |
